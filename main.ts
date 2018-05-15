@@ -469,7 +469,7 @@ namespace Plume_IoT {
 
         // read pulse
         const d = pins.pulseIn(DigitalPin.P7, PulseValue.High, maxCmDistance * 58);
-        return d / 58
+        return d *63/2320
 
     }
 
