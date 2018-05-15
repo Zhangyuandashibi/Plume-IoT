@@ -1,0 +1,19 @@
+{
+    "name": "Plume-IoT",
+    "version": "0.0.0",
+    "description": "",
+    "license": "MIT",
+    "dependencies": {
+        "core": "*",
+        "bluetooth": "*"
+    },
+    "files": [
+        "README.md",
+        "main.ts",
+        "sendbuffer.asm"
+    ],
+    "testFiles": [
+        "test.ts"
+    ],
+    "public": false
+}
