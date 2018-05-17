@@ -350,7 +350,7 @@ namespace Plume_IoT {
     /**
     *驱动步进电机转动一定角度。
     */
-    //% blockId=Plume-IoT_motor_angle block="步进电机旋转|%angle|角度 %StepperDirection|转向"
+    //% blockId=Plume-IoT_Stepper_angle block="步进电机旋转|%angle|角度 %StepperDirection|转向"
     //% weight=30
     export function angle(angle: number, StepperDirection: StepperDirection): void {
         let i = angle
@@ -361,7 +361,7 @@ namespace Plume_IoT {
     /**
       *驱动步进电机转动一定圈数。 
       */
-    //% blockId=Plume-IoT_motor_run block="步进电机旋转|%turns|圈 %StepperDirection|转向"
+    //% blockId=Plume-IoT_Stepper_run block="步进电机旋转|%turns|圈 %StepperDirection|转向"
     //% weight=29
     export function Turnround(turns: turns, StepperDirection: StepperDirection): void {
         let i = 0
@@ -376,6 +376,8 @@ namespace Plume_IoT {
             }
         }
     }
+
+
     /**
     * 驱动一个电机转动，并且设定其速度。
     * @param speed [0-255] speed of motor; eg: 255
