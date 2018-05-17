@@ -2,9 +2,8 @@
 
 
 /**
- * 使用蓝牙发送和接受字符串或者数字
- * 
- * 
+ * 蓝牙部分
+ * 使用蓝牙发送和接收字符串或者数字
  */
 //% color=#ee0000 weight=35 icon= "" block="Plume-IoT"
 namespace Plume_IoT {
@@ -51,7 +50,7 @@ namespace Plume_IoT {
     //% mutateText="My Arguments"
     //% mutateDefaults="key,numberValue"
     //% blockId=Plume-IoT_on_number_received
-    //% block="接受到的数字|密钥值 %theKey|数字值"
+    //% block="接收到的数字|密钥值 %theKey|数字值"
     //% weight = 33
     export function onNumberReceived(key: string, callback: (numberValue: TypeContainer) => void) {
         let newHandler = new LinkedKeyHandlerList()
@@ -216,227 +215,246 @@ namespace Plume_IoT {
 
 
 /**
- * RGB和电机驱动和超声波
- * 
+ * RGB、电机驱动和超声波部分
+ * 调用板载RGB、电机、步进电机、超声波。
  */
 //% color="#ee0000" weight=30 icon="" block="Plume-IoT"
 namespace Plume_IoT {
-
-    const STP_CHA_L = 2047
-    const STP_CHA_H = 4095
-
-    const STP_CHB_L = 1
-    const STP_CHB_H = 2047
-
-    const STP_CHC_L = 1023
-    const STP_CHC_H = 3071
-
-    const STP_CHD_L = 3071
-    const STP_CHD_H = 1023
-
-    let neoStrip: neopixel.Strip;
-
     export enum Motors {
-        M1A = 0x1,
-        M1B = 0x2,
-        M2A = 0x3,
-        M2B = 0x4
+        M1 = 0,
+        M2 = 1
+    }
+    /**
+     * 定义转动方向
+     */
+    export enum MorotDirection {
+        //% block=正向
+        forward = 1,
+        //% block=反向
+        reverse = 0
     }
 
-    export enum Steppers {
-        M1 = 0x1,
-        M2 = 0x2
+    export function Clockwise() {
+        pins.digitalWritePin(DigitalPin.P5, 1)
+        pins.digitalWritePin(DigitalPin.P11, 0)
+        pins.digitalWritePin(DigitalPin.P13, 0)
+        pins.digitalWritePin(DigitalPin.P14, 0)
+        control.waitMicros(2500)
+        pins.digitalWritePin(DigitalPin.P5, 1)
+        pins.digitalWritePin(DigitalPin.P11, 1)
+        pins.digitalWritePin(DigitalPin.P13, 0)
+        pins.digitalWritePin(DigitalPin.P14, 0)
+        control.waitMicros(2500)
+        pins.digitalWritePin(DigitalPin.P5, 0)
+        pins.digitalWritePin(DigitalPin.P11, 1)
+        pins.digitalWritePin(DigitalPin.P13, 0)
+        pins.digitalWritePin(DigitalPin.P14, 0)
+        control.waitMicros(2500)
+        pins.digitalWritePin(DigitalPin.P5, 0)
+        pins.digitalWritePin(DigitalPin.P11, 1)
+        pins.digitalWritePin(DigitalPin.P13, 1)
+        pins.digitalWritePin(DigitalPin.P14, 0)
+        control.waitMicros(2500)
+        pins.digitalWritePin(DigitalPin.P5, 0)
+        pins.digitalWritePin(DigitalPin.P11, 0)
+        pins.digitalWritePin(DigitalPin.P13, 1)
+        pins.digitalWritePin(DigitalPin.P14, 0)
+        control.waitMicros(2500)
+        pins.digitalWritePin(DigitalPin.P5, 0)
+        pins.digitalWritePin(DigitalPin.P11, 0)
+        pins.digitalWritePin(DigitalPin.P13, 1)
+        pins.digitalWritePin(DigitalPin.P14, 1)
+        control.waitMicros(2500)
+        pins.digitalWritePin(DigitalPin.P5, 0)
+        pins.digitalWritePin(DigitalPin.P11, 0)
+        pins.digitalWritePin(DigitalPin.P13, 0)
+        pins.digitalWritePin(DigitalPin.P14, 1)
+        control.waitMicros(2500)
+        pins.digitalWritePin(DigitalPin.P5, 1)
+        pins.digitalWritePin(DigitalPin.P11, 0)
+        pins.digitalWritePin(DigitalPin.P13, 0)
+        pins.digitalWritePin(DigitalPin.P14, 1)
+        control.waitMicros(2500)
     }
 
-    export enum Turns {
+    export function AntiClockwise() {
+        pins.digitalWritePin(DigitalPin.P5, 1)
+        pins.digitalWritePin(DigitalPin.P11, 0)
+        pins.digitalWritePin(DigitalPin.P13, 0)
+        pins.digitalWritePin(DigitalPin.P14, 1)
+        control.waitMicros(2500)
+        pins.digitalWritePin(DigitalPin.P5, 0)
+        pins.digitalWritePin(DigitalPin.P11, 0)
+        pins.digitalWritePin(DigitalPin.P13, 0)
+        pins.digitalWritePin(DigitalPin.P14, 1)
+        control.waitMicros(2500)
+        pins.digitalWritePin(DigitalPin.P5, 0)
+        pins.digitalWritePin(DigitalPin.P11, 0)
+        pins.digitalWritePin(DigitalPin.P13, 1)
+        pins.digitalWritePin(DigitalPin.P14, 1)
+        control.waitMicros(2500)
+        pins.digitalWritePin(DigitalPin.P5, 0)
+        pins.digitalWritePin(DigitalPin.P11, 0)
+        pins.digitalWritePin(DigitalPin.P13, 1)
+        pins.digitalWritePin(DigitalPin.P14, 0)
+        control.waitMicros(2500)
+        pins.digitalWritePin(DigitalPin.P5, 0)
+        pins.digitalWritePin(DigitalPin.P11, 1)
+        pins.digitalWritePin(DigitalPin.P13, 1)
+        pins.digitalWritePin(DigitalPin.P14, 0)
+        control.waitMicros(2500)
+        pins.digitalWritePin(DigitalPin.P5, 0)
+        pins.digitalWritePin(DigitalPin.P11, 1)
+        pins.digitalWritePin(DigitalPin.P13, 0)
+        pins.digitalWritePin(DigitalPin.P14, 0)
+        control.waitMicros(2500)
+        pins.digitalWritePin(DigitalPin.P5, 1)
+        pins.digitalWritePin(DigitalPin.P11, 1)
+        pins.digitalWritePin(DigitalPin.P13, 0)
+        pins.digitalWritePin(DigitalPin.P14, 0)
+        control.waitMicros(2500)
+        pins.digitalWritePin(DigitalPin.P5, 1)
+        pins.digitalWritePin(DigitalPin.P11, 0)
+        pins.digitalWritePin(DigitalPin.P13, 0)
+        pins.digitalWritePin(DigitalPin.P14, 0)
+        control.waitMicros(2500)
+    }
+    export enum turns {
+        //% blockId="T1B8" block="1/8"
+        T1B8 = 64,
         //% blockId="T1B4" block="1/4"
-        T1B4 = 90,
+        T1B4 = 128,
         //% blockId="T1B2" block="1/2"
-        T1B2 = 180,
+        T1B2 = 256,
         //% blockId="T1B0" block="1"
-        T1B0 = 360,
+        T1B0 = 512,
         //% blockId="T2B0" block="2"
-        T2B0 = 720,
+        T2B0 = 1024,
         //% blockId="T3B0" block="3"
-        T3B0 = 1080,
+        T3B0 = 1536,
         //% blockId="T4B0" block="4"
-        T4B0 = 1440,
+        T4B0 = 2048,
         //% blockId="T5B0" block="5"
-        T5B0 = 1800
+        T5B0 = 2560
     }
 
-    function setPwm(channel: number, on: number, off: number): void {
-        if (channel < 0 || channel > 15)
-            return;
-
-        let buf = pins.createBuffer(5);
-        buf[1] = on & 0xff;
-        buf[2] = (on >> 8) & 0xff;
-        buf[3] = off & 0xff;
-        buf[4] = (off >> 8) & 0xff;
+    export enum StepperDirection {
+        //% blockId="clockwise" block="顺时针"
+        clockwise = 0,
+        //% blockId="ni" block="逆时针"
+        nishi = 1
     }
 
 
-    function setStepper(index: number, dir: boolean): void {
-        if (index == 1) {
-            if (dir) {
-                setPwm(0, STP_CHA_L, STP_CHA_H);
-                setPwm(2, STP_CHB_L, STP_CHB_H);
-                setPwm(1, STP_CHC_L, STP_CHC_H);
-                setPwm(3, STP_CHD_L, STP_CHD_H);
-            } else {
-                setPwm(3, STP_CHA_L, STP_CHA_H);
-                setPwm(1, STP_CHB_L, STP_CHB_H);
-                setPwm(2, STP_CHC_L, STP_CHC_H);
-                setPwm(0, STP_CHD_L, STP_CHD_H);
-            }
-        } else {
-            if (dir) {
-                setPwm(4, STP_CHA_L, STP_CHA_H);
-                setPwm(6, STP_CHB_L, STP_CHB_H);
-                setPwm(5, STP_CHC_L, STP_CHC_H);
-                setPwm(7, STP_CHD_L, STP_CHD_H);
-            } else {
-                setPwm(7, STP_CHA_L, STP_CHA_H);
-                setPwm(5, STP_CHB_L, STP_CHB_H);
-                setPwm(6, STP_CHC_L, STP_CHC_H);
-                setPwm(4, STP_CHD_L, STP_CHD_H);
-            }
-        }
-    }
 
-    function stopMotor(index: number) {
-        setPwm((index - 1) * 2, 0, 0);
-        setPwm((index - 1) * 2 + 1, 0, 0);
-    }
     /**
-     * 驱动其中一个步进电机转动一定角度
-     */
-    //% blockId=Plume_IoT_stepper_degree block="驱动步进电机转动|%index|角度 %degree"
+    *驱动步进电机转动一定角度。
+    */
+    //% blockId=Plume-IoT_motor_angle block="步进电机旋转|%angle|角度 %StepperDirection|转向"
+    //% weight=30
+    export function angle(angle: number, StepperDirection: StepperDirection): void {
+        let i = angle
+        i = i * 512 / 360
+        Turnround(i, StepperDirection)
+    }
+
+    /**
+      *驱动步进电机转动一定圈数。 
+      */
+    //% blockId=Plume-IoT_motor_run block="步进电机旋转|%turns|圈 %StepperDirection|转向"
     //% weight=29
-    export function StepperDegree(index: Steppers, degree: number): void {
-        setStepper(index, degree > 0);
-        degree = Math.abs(degree);
-        basic.pause(10240 * degree / 360);
-        MotorStopAll()
+    export function Turnround(turns: turns, StepperDirection: StepperDirection): void {
+        let i = 0
+        if (StepperDirection == 0) {
+            for (i = 0; i < turns; i++) {
+                Clockwise()
+            }
+        }
+        else if (StepperDirection == 1) {
+            for (i = 0; i < turns; i++) {
+                AntiClockwise()
+            }
+        }
     }
-
     /**
-     * 驱动步进电机转动一定圈数
-     */
-    //% blockId=Plume_IoT_stepper_turn block="驱动步进电机转动|%index|圈 %turn"
+    * 驱动一个电机转动，并且设定其速度。
+    * @param speed [0-255] speed of motor; eg: 255
+    */
+    //% blockId=Plume-IoT_motor_run block="电机|%index|转速 %speed|方向 %MorotDirection"
     //% weight=28
-    export function StepperTurn(index: Steppers, turn: Turns): void {
-        let degree = turn;
-        StepperDegree(index, degree);
-    }
-
-    /**
-     * 同时驱动两个步进电机转动一定角度
-     */
-    //% blockId=Plume_IoT_stepper_dual block="同时驱动两个步进电机转动 |M1转动 %degree1|角度 M2转动 %degree2|角度"
-    //% weight=27
-    export function StepperDual(degree1: number, degree2: number): void {
-        setStepper(1, degree1 > 0);
-        setStepper(2, degree2 > 0);
-        degree1 = Math.abs(degree1);
-        degree2 = Math.abs(degree2);
-        basic.pause(10240 * Math.min(degree1, degree2) / 360);
-        if (degree1 > degree2) {
-            stopMotor(3); stopMotor(4);
-            basic.pause(10240 * (degree1 - degree2) / 360);
-        } else {
-            stopMotor(1); stopMotor(2);
-            basic.pause(10240 * (degree2 - degree1) / 360);
+    //% speed.min=0 speed.max=255
+    export function MotorRun(index: Motors, speed: number, MorotDirection: MorotDirection): void {
+        let pwm = speed
+        if (pwm >= 255) {
+            pwm = 255
         }
+        pwm = pwm * 4
+        if (MorotDirection == 0) {
+            if (index == 1) {
+                pins.digitalWritePin(DigitalPin.P14, 0)
+                pins.analogWritePin(AnalogPin.P13, pwm)
+            }
+            else if (index == 0) {
+                pins.digitalWritePin(DigitalPin.P5, 0)
+                pins.analogWritePin(AnalogPin.P11, pwm)
+            }
 
-        MotorStopAll()
-    }
 
-    /**
-     * 驱动其中一个电机转动，速度最大为255，正负表示正反转方向
-     * 
-     */
-    //% blockId=Plume_IoT_motor_run block="电机|%index|转速 %speed"
-    //% weight=26
-    //% speed.min=-255 speed.max=255
-    //% name.fieldEditor="gridpicker" name.fieldOptions.columns=4
-    export function MotorRun(index: Motors, speed: number): void {
-        speed = speed * 16; // map 255 to 4096
-        if (speed >= 4096) {
-            speed = 4095
         }
-        if (speed <= -4096) {
-            speed = -4095
-        }
-        if (index > 4 || index <= 0)
-            return
-        let pp = (index - 1) * 2
-        let pn = (index - 1) * 2 + 1
-        if (speed >= 0) {
-            setPwm(pp, 0, speed)
-            setPwm(pn, 0, 0)
-        } else {
-            setPwm(pp, 0, 0)
-            setPwm(pn, 0, -speed)
+        else if (MorotDirection == 1) {
+            if (index == 1) {
+                pins.digitalWritePin(DigitalPin.P13, 0)
+                pins.analogWritePin(AnalogPin.P14, pwm)
+
+            }
+            else if (index == 0) {
+                pins.digitalWritePin(DigitalPin.P5, 0)
+                pins.analogWritePin(AnalogPin.P11, pwm)
+            }
         }
     }
-
-
-
 	/**
-	 * 同时驱动两个电机一起转动
-	 * @param motor1 First Motor; eg: M1A, M1B
-	 * @param speed1 [-255-255] speed of motor; eg: 150, -150
-	 * @param motor2 Second Motor; eg: M2A, M2B
-	 * @param speed2 [-255-255] speed of motor; eg: 150, -150
+	 * 同时驱动两个电机一起转动，并且设定他们的速度。
+	 * @param speed1 [0-255] speed of motor; eg: 255
+	 * @param speed2 [0-255] speed of motor; eg: 255
 	*/
-    //% blockId=Plume_IoT_motor_dual block="电机|%motor1|转速 %speed1|%motor2|转速 %speed2"
-    //% weight=25
-    //% speed1.min=-255 speed1.max=255
-    //% speed2.min=-255 speed2.max=255
-    //% name.fieldEditor="gridpicker" name.fieldOptions.columns=4
-    export function MotorRunDual(motor1: Motors, speed1: number, motor2: Motors, speed2: number): void {
-        MotorRun(motor1, speed1);
-        MotorRun(motor2, speed2);
+    //% blockId=Plume-IoT_motor_dual block="M1|转速 %speed1 |转向 %MorotDirection1 |M2|转速 %speed2 |转向 %MorotDirection2"
+    //% weight=27
+    //% speed1.min=0 speed1.max=255
+    //% speed2.min=0 speed2.max=255
+    export function MotorRunDual(speed1: number, MorotDirection1: MorotDirection, speed2: number, MorotDirection2: MorotDirection): void {
+        MotorRun(0, speed1, MorotDirection1);
+        MotorRun(1, speed2, MorotDirection2);
     }
-
 	/**
-	 * 延时驱动其中一个电机转动，速度在-255到255之间。
-	 * @param index Motor Index; eg: M1A, M1B, M2A, M2B
-	 * @param speed [-255-255] speed of motor; eg: 150, -150
+	 * 驱动其中一个电机转动并且延时，然后关闭
+	 * @param index Motor Index; eg: M1, M2
+	 * @param speed [0-255] speed of motor; eg: 255
 	 * @param delay seconde delay to stop; eg: 1
 	*/
-    //% blockId=Plume_IoT_motor_rundelay block="电机|%index|转速 %speed|延迟时间 %delay|s"
-    //% weight=24
-    //% speed.min=-255 speed.max=255
-    //% name.fieldEditor="gridpicker" name.fieldOptions.columns=4
-    export function MotorRunDelay(index: Motors, speed: number, delay: number): void {
-        MotorRun(index, speed);
+    //% blockId=Plume-IoT_motor_rundelay block="电机%index|速度 %speed|  转向 %MorotDirection|延时/s %delay"
+    //% weight=26
+    //% speed.min=0 speed.max=255
+    export function MotorRunDelay(index: Motors, speed: number, MorotDirection: MorotDirection, delay: number): void {
+        MotorRun(index, speed, MorotDirection);
         basic.pause(delay * 1000);
-        MotorRun(index, 0);
+        MotorRun(index, 0, MorotDirection);
     }
 
-
-    /**
-     * 停止其中一个电机转动。
-     */
-    //% blockId=Plume_IoT_stop block="停止电机|%index|"
-    //% weight=23
+    //% blockId=Plume-IoT_stop block="电机停止|%index|"
+    //% weight=25
     export function MotorStop(index: Motors): void {
-        MotorRun(index, 0);
+
+        MotorRun(index, 0, 0);
+        MotorRun(index, 0, 1);
     }
+    //% blockId=Plume-IoT_stop_all block="停止所有电机"
+    //% weight=24
+    //% blockGap=50
 
-
-    /**
-     * 停止当前所有的电机转动
-     */
-    //% blockId=Plume_IoT_stop_all block="停止全部电机"
-    //% weight=22
-    //% blockGap=30
     export function MotorStopAll(): void {
-        for (let idx = 1; idx <= 4; idx++) {
-            stopMotor(idx);
+        for (let idx = 0; idx <= 1; idx++) {
+            MotorStop(idx);
         }
     }
 
@@ -444,8 +462,9 @@ namespace Plume_IoT {
       * 使用板载的12个rgb彩灯
       */
     //% blockId="Plume_IoT_rgb" block="使用RGB"
-    //% weight=21
+    //% weight=23
     export function rgb(): neopixel.Strip {
+        let neoStrip: neopixel.Strip;
         if (!neoStrip) {
             neoStrip = neopixel.create(DigitalPin.P8, 12, NeoPixelMode.RGB)
         }
@@ -456,7 +475,7 @@ namespace Plume_IoT {
        * 发射一个超声波，并且获取当前距离，并返回一串数字。
        * 注意：超声波测量盲区距离在0-4厘米，在测量距离小于盲区距离时，返回值为0.
     */
-    //%icon="" weight=20
+    //%icon="" weight=22
     //% blockId=Plume_IoT_ping block="获取距离 "
     export function ping(maxCmDistance = 500): number {
         // send pulse
@@ -469,7 +488,7 @@ namespace Plume_IoT {
 
         // read pulse
         const d = pins.pulseIn(DigitalPin.P7, PulseValue.High, maxCmDistance * 58);
-        return d *63/2320
+        return d * 63 / 2320
 
     }
 
