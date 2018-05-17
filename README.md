@@ -17,8 +17,8 @@
 
 # 硬件预览
 
-##正面
+## 正面
 ![image](http://wx1.sinaimg.cn/mw690/0079sDrtgy1frehs8zb0dj31kw23vnpd.jpg)
-##背面
+## 背面
 ![image](http://wx1.sinaimg.cn/mw690/0079sDrtly9frei160ildj30j60ee40i.jpg)
 
