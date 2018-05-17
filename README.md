@@ -17,3 +17,5 @@
 
 # 硬件预览
 ![image](http://wx1.sinaimg.cn/mw690/0079sDrtgy1frehs8zb0dj31kw23vnpd.jpg)
+![image](http://wx1.sinaimg.cn/mw690/0079sDrtly9frei160ildj30j60ee40i.jpg)
+
