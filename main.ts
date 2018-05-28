@@ -64,7 +64,7 @@ namespace Plume_IoT {
      * 在连接蓝牙的情况下，发送一个字符串。
      */
     //% weight = 32
-    //% blockId=Plume-IoT_send_string_key_value block="发送一个字符串|key %key|发送值 %value"
+    //% blockId=Plume-IoT_send_string_key_value block="发送一个字符串|密钥值 %key|发送值 %value"
     export function sendMessageWithStringValue(key: string, value: string): void {
         sendRawMessage(key, ValueTypeIndicator.String, value)
     }
@@ -73,7 +73,7 @@ namespace Plume_IoT {
      */
     //% weight = 31
     //% blockGap=50
-    //% blockId=Plume-IoT_send_number_key_value block="发送一串数字|key %key|数字值 %value"
+    //% blockId=Plume-IoT_send_number_key_value block="发送一串数字|密钥值 %key|数字值 %value"
     export function sendMessageWithNumberValue(key: string, value: number): void {
         sendRawMessage(key, ValueTypeIndicator.Number, value.toString())
     }
