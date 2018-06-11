@@ -229,9 +229,9 @@ namespace Plume_IoT {
      */
     export enum MorotDirection {
         //% block=正向
-        forward = 1,
+        Forward = 1,
         //% block=反向
-        reverse = 0
+        Reverse = 0
     }
 
     export function Clockwise() {
@@ -341,8 +341,8 @@ namespace Plume_IoT {
     export enum StepperDirection {
         //% blockId="clockwise" block="顺时针"
         clockwise = 0,
-        //% blockId="ni" block="逆时针"
-        nishi = 1
+        //% blockId="Anti_Clockwise" block="逆时针"
+        Anti_Clockwise = 1
     }
 
 
@@ -391,29 +391,27 @@ namespace Plume_IoT {
             pwm = 255
         }
         pwm = pwm * 4
-        if (MorotDirection == 0) {
-            if (index == 1) {
+        if (index == 0) {
+            if (MorotDirection == 1) {
                 pins.digitalWritePin(DigitalPin.P14, 0)
                 pins.analogWritePin(AnalogPin.P13, pwm)
             }
-            else if (index == 0) {
-                pins.digitalWritePin(DigitalPin.P5, 0)
-                pins.analogWritePin(AnalogPin.P11, pwm)
-            }
-
-
-        }
-        else if (MorotDirection == 1) {
-            if (index == 1) {
+            else if (MorotDirection == 0) {
                 pins.digitalWritePin(DigitalPin.P13, 0)
                 pins.analogWritePin(AnalogPin.P14, pwm)
-
             }
-            else if (index == 0) {
+        }
+        else if (index == 1) {
+            if (MorotDirection == 1) {
+                pins.digitalWritePin(DigitalPin.P11, 0)
+                pins.analogWritePin(AnalogPin.P5, pwm)
+            }
+            else if (MorotDirection == 0) {
                 pins.digitalWritePin(DigitalPin.P5, 0)
                 pins.analogWritePin(AnalogPin.P11, pwm)
             }
         }
+
     }
 	/**
 	 * 同时驱动两个电机一起转动，并且设定他们的速度。
