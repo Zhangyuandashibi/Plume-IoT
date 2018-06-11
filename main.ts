@@ -586,8 +586,8 @@ namespace Plume_IoT {
     //% blockId=Plume_IoT_Heart block="获取心率值 "
 
     export function Heart(): number {
-        let zt = 1
-        while (zt) {
+        let state = 1
+        while (state) {
             current_running_time = input.runningTime()
             analog_1 = pins.analogReadPin(AnalogPin.P1)
             if (remind == 0) {
@@ -607,7 +607,7 @@ namespace Plume_IoT {
                 counter = counter * 4
                 heart = counter
                 counter = 0
-                zt = 0
+                state = 0
                 previous_running_time = input.runningTime()
             }
         }
